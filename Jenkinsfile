@@ -22,7 +22,7 @@ pipeline {
 			steps {
 				sh '''
 					docker run --name juice-shop -d --rm \\
-						-p 127:0.0.1:3000:3000 \\
+						-p 127.0.0.1:3000:3000 \\
 						bkimminich/juice-shop
 					sleep 5
 				'''
