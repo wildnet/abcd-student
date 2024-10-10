@@ -24,7 +24,7 @@ pipeline {
 					sleep 5
 				'''
 				sh 'echo "${WORKSPACE}"'
-				sh 'ls -alh ""${WORKSPACE}"'
+				sh 'ls -alh "${WORKSPACE}"'
 				sh '''
 					docker run --name zap --rm --add-host=host.docker.internal:host-gateway -v "${WORKSPACE}/.zap:/zap/wrk/:rw" -t ghcr.io/zaproxy/zaproxy:stable bash -c "ls -alh; pwd; ls -alh /zap/wrk/; ls -alh /zap/wrk/passive.yaml"
 				'''
@@ -32,8 +32,10 @@ pipeline {
 			post {
 				always {
 					sh '''
-						docker cp zap:/zap/wrk/reports/zap_html_report.html "/home/michal/abcdso/reports/zap_html_report.html"
-						docker cp zap:/zap/wrk/reports/zap_xml_report.xml "/home/michal/abcdso/reports/zap_xml_report.xml"
+						docker cp zap:/zap/wrk/reports/zap_html_report.html "${WORKSPACE}/reports/zap_html_report.html"
+						docker cp zap:/zap/wrk/reports/zap_xml_report.xml "${WORKSPACE}/reports/zap_xml_report.xml"
+					'''
+					sh '''
 						docker stop zap juice-shop
 					'''
 				}
