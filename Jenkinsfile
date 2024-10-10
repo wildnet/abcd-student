@@ -24,14 +24,12 @@ pipeline {
 					docker run --name juice-shop -d --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
 					sleep 5
 				'''
-				sh 'echo "${WORKSPACE}"'
-				sh 'ls -alh "${WORKSPACE}"'
 				sh '''
 					docker run --name zap --rm \\
 						--add-host=host.docker.internal:host-gateway \\
 						-v "/home/michal/abcdso/abcd-student/.zap:/zap/wrk/:rw" \\
 						-t ghcr.io/zaproxy/zaproxy:stable bash -c \\
-						"ls -alh; pwd; ls -alh /zap/wrk/; cat /zap/wrk/passive.yaml; ls -alh /zap/wrk/passive.yaml"
+						"zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive.yaml" || true
 				'''
 			}
 			post {
