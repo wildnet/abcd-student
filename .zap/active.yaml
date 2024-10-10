@@ -28,17 +28,19 @@ jobs:
   - type: passiveScan-wait
     parameters:
       maxDuration: 5
-      
+
+  - type: activeScan
+
   - type: report
     parameters:
       template: traditional-html
       reportDir: /zap/wrk/reports
-      reportFile: p_zap_html_report
-      reportTitle: "ZAP Passive Scan Report"
+      reportFile: a_zap_html_report
+      reportTitle: "ZAP Active Scan Report"
 
   - type: report
     parameters:
       template: traditional-xml
       reportDir: /zap/wrk/reports
-      reportFile: p_zap_xml_report
-      reportTitle: "ZAP Passive Scan Report"
+      reportFile: a_zap_xml_report
+      reportTitle: "ZAP Active Scan Report"
