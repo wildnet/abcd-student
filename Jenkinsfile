@@ -25,7 +25,7 @@ pipeline {
 					sleep 5
 				'''
 				sh '''
-					docker run --name zap --rm \\
+					docker run --name zap -d --rm \\
 						--add-host=host.docker.internal:host-gateway \\
 						-v "/home/michal/abcdso/abcd-student/.zap:/zap/wrk/:rw" \\
 						-t ghcr.io/zaproxy/zaproxy:stable bash -c \\
@@ -35,7 +35,7 @@ pipeline {
 			post {
 				always {
 					sh '''
-						docker stop juice-shop
+						docker stop zap juice-shop
 					'''
 				}
 			}
