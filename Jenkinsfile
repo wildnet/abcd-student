@@ -14,10 +14,7 @@ pipeline {
         }
         stage('Example') {
             steps {
-                echo 'Hello!'
                 sh 'ls -la'
-				sh 'echo "${WORKSPACE}"'
-				sh 'echo "${PWD}"'
             }
         }
 		stage('[ZAP] Baseline passive-scan') {
