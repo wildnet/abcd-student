@@ -27,12 +27,12 @@ pipeline {
 				sh 'echo "${WORKSPACE}"'
 				sh 'ls -alh "${WORKSPACE}"'
 				sh '''
-					docker run --name zap --rm \
-					--add-host=host.docker.internal:host-gateway \
-					-v "${WORKSPACE}/.zap/passive.yaml:/zap/wrk/passive_scan.yaml:rw" \
-					-v "${WORKSPACE}/.zap/reports:/zap/wrk/reports:rw \
-					-t ghcr.io/zaproxy/zaproxy:stable bash -c \
-					"ls -alh; pwd; ls -alh /zap/wrk/; ls -alh /zap/wrk/passive_scan.yaml"
+					docker run --name zap --rm \\
+						--add-host=host.docker.internal:host-gateway \\
+						-v "${WORKSPACE}/.zap/passive.yaml:/zap/wrk/passive_scan.yaml:rw" \\
+						-v "${WORKSPACE}/.zap/reports:/zap/wrk/reports:rw \\
+						-t ghcr.io/zaproxy/zaproxy:stable bash -c \\
+						"ls -alh; pwd; ls -alh /zap/wrk/; ls -alh /zap/wrk/passive_scan.yaml"
 				'''
 			}
 			post {
