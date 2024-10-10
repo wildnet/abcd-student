@@ -29,8 +29,7 @@ pipeline {
 				sh '''
 					docker run --name zap --rm \\
 						--add-host=host.docker.internal:host-gateway \\
-						-v "${WORKSPACE}/.zap/:/zap/wrk/:rw" \\
-						-v "${WORKSPACE}/reports/:/zap/wrk/reports/:rw" \\
+						-v "/home/michal/abcdso/abcd-student/.zap:/zap/wrk/:rw" \\
 						-t ghcr.io/zaproxy/zaproxy:stable bash -c \\
 						"ls -alh; pwd; ls -alh /zap/wrk/; cat /zap/wrk/passive.yaml; ls -alh /zap/wrk/passive.yaml"
 				'''
