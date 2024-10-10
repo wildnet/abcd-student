@@ -25,18 +25,17 @@ pipeline {
 					sleep 5
 				'''
 				sh '''
-					docker run --name zap -d --rm \\
+					docker run --name zap --rm \\
 						--add-host=host.docker.internal:host-gateway \\
 						-v "/home/michal/abcdso/abcd-student/.zap:/zap/wrk/:rw" \\
 						-t ghcr.io/zaproxy/zaproxy:stable bash -c \\
-						"zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive.yaml" || true
-						sleep 300
+						"zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive.yaml"
 				'''
 			}
 			post {
 				always {
 					sh '''
-						docker stop zap juice-shop
+						docker stop juice-shop
 					'''
 				}
 			}
