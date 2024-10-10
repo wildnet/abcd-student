@@ -35,7 +35,7 @@ pipeline {
 			post {
 				always {
 					sh '''
-						docker stop zap juice-shop
+						docker stop juice-shop
 					'''
 				}
 			}
