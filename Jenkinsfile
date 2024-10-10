@@ -35,8 +35,6 @@ pipeline {
 			post {
 				always {
 					sh '''
-						docker cp zap:/zap/wrk/reports/zap_html_report.html "${WORKSPACE}/reports/zap_html_report.html"
-						docker cp zap:/zap/wrk/reports/zap_xml_report.xml "${WORKSPACE}/reports/zap_xml_report.xml"
 						docker stop zap juice-shop
 					'''
 				}
