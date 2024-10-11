@@ -12,7 +12,7 @@ pipeline {
                 }
             }
         }
-		stage('Starting APP environment') {
+		stage('Starting environment') {
 			steps {
 				sh 'docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 bkimminich/juice-shop'
 				timeout(5) {
@@ -31,12 +31,10 @@ pipeline {
     				}
 				}
 			}
-		}
-        stage('Preparation for reporting') {
-            steps {
+			steps {
 				sh 'mkdir -p results'
             }
-        }
+		}
 		stage('DAST: [ZAP] Active scan') {
 			steps {
 				sh '''
