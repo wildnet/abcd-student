@@ -14,7 +14,7 @@ pipeline {
         }
 		stage('Starting environment') {
 			steps {
-				sh 'docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 bkimminich/juice-shop'
+				sh 'docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 -p 127.0.0.1:3000:3000 bkimminich/juice-shop'
 				timeout(5) {
  		   			waitUntil {
        					script {
