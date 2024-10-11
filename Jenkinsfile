@@ -18,8 +18,15 @@ pipeline {
 				timeout(5) {
  		   			waitUntil {
        					script {
-         					def r = sh script: 'wget -q http://172.17.0.1:3000 -O /dev/null', returnStdout: true
-         					return (r == 0);
+							try {
+                				def response = httpRequest 'http://172.17.0.1:3000'
+                				return (response.status == 200)
+            				}
+            				catch (exception) {
+                 				return false
+            				}
+         					//def r = sh script: 'wget -q http://172.17.0.1:3000 -O /dev/null', returnStdout: true
+         					//return (r == 0);
        					}
     				}
 				}
