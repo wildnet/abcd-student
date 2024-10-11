@@ -20,7 +20,7 @@ pipeline {
 		stage('DAST: [ZAP] Active scan') {
 			steps {
 				sh '''
-					docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 bkimminich/juice-shop
+					docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 bkimminich/juice-shop
 					sleep 5
 				'''
 				sh '''
