@@ -15,8 +15,7 @@ pipeline {
 		stage('Starting APP environment') {
 			steps {
 				sh 'docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 bkimminich/juice-shop'
-			}
-			timeout(5) {
+				timeout(5) {
  		   			waitUntil {
        					script {
 							try {
@@ -31,6 +30,7 @@ pipeline {
        					}
     				}
 				}
+			}
 		}
         stage('Preparation for reporting') {
             steps {
