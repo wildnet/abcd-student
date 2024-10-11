@@ -12,6 +12,14 @@ pipeline {
                 }
             }
         }
+		stage('Starting APP environment') {
+			steps {
+				sh '''
+					docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 bkimminich/juice-shop
+					sleep 5
+				'''
+			}
+		}
         stage('Preparation for reporting') {
             steps {
 				sh 'mkdir -p results'
@@ -19,10 +27,6 @@ pipeline {
         }
 		stage('DAST: [ZAP] Active scan') {
 			steps {
-				sh '''
-					docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 bkimminich/juice-shop
-					sleep 5
-				'''
 				sh '''
 					docker run --name zap \
 						--add-host=host.docker.internal:host-gateway \
