@@ -4,7 +4,7 @@ pipeline {
         skipDefaultCheckout(true)
     }
     stages {
-        stage('Code checkout from GitHub') {
+        stage('GH code checkout') {
             steps {
                 script {
                     cleanWs()
@@ -12,20 +12,19 @@ pipeline {
                 }
             }
         }
-        stage('Example') {
+        stage('Preparation for reporting') {
             steps {
-				sh 'pwd'
-                sh 'ls -la'
+				sh 'mkdir -p results'
             }
         }
-		stage('[ZAP] Baseline passive-scan') {
+		stage('DAST: [ZAP] Active scan') {
 			steps {
 				sh '''
-					docker run --name juice-shop -d --rm -p 3000:3000 bkimminich/juice-shop
+					docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 bkimminich/juice-shop
 					sleep 5
 				'''
 				sh '''
-					docker run --name zap --rm \
+					docker run --name zap \
 						--add-host=host.docker.internal:host-gateway \
 						-v "/home/michal/abcdso/abcd-student/.zap:/zap/wrk/:rw" \
 						-t ghcr.io/zaproxy/zaproxy:stable bash -c \
@@ -35,7 +34,10 @@ pipeline {
 			post {
 				always {
 					sh '''
+						docker cp zap:/zap/wrk/reports/zap_html_report.html "${WORKSPACE}/results/."
+						docker cp zap:/zap/wrk/reports/zap_xml_report.xml "${WORKSPACE}/results/."
 						docker stop juice-shop
+						docker rm zap
 					'''
 				}
 			}
