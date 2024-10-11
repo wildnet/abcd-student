@@ -14,10 +14,15 @@ pipeline {
         }
 		stage('Starting APP environment') {
 			steps {
-				sh '''
-					docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 bkimminich/juice-shop
-					sleep 5
-				'''
+				sh 'docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 bkimminich/juice-shop'
+				timeout(5) {
+ 		   			waitUntil {
+       					script {
+         					def r = sh script: 'wget -q http://172.17.0.1:3000 -O /dev/null', returnStdout: true
+         					return (r == 0);
+       					}
+    				}
+				}
 			}
 		}
         stage('Preparation for reporting') {
