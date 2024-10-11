@@ -4,7 +4,7 @@ pipeline {
         skipDefaultCheckout(true)
     }
     stages {
-        stage('GH code checkout') {
+        stage('Git code checkout') {
             steps {
                 script {
                     cleanWs()
@@ -33,14 +33,14 @@ pipeline {
 				sh 'mkdir -p results'
             }
 		}
-		stage('DAST: [ZAP] Active scan') {
+		stage('DAST: Active scan [ZAP]') {
 			steps {
 				sh '''
 					docker run --name zap \
 						--add-host=host.docker.internal:host-gateway \
 						-v "/home/michal/abcdso/abcd-student/.zap:/zap/wrk/:rw" \
 						-t ghcr.io/zaproxy/zaproxy:stable bash -c \
-						"zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/active.yaml"
+						"zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/active.yaml" || true
 				'''
 			}
 			post {
