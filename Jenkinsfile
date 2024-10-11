@@ -55,4 +55,12 @@ pipeline {
 			}
 		}		
     }
+	post {
+		always {
+			echo 'Archiving reports'
+			archiveArtifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
+			//echo 'Sending reports to DefectDojo'
+			//defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'nie@mam.pl')
+		}
+	}
 }
