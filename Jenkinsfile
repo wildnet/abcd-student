@@ -30,8 +30,6 @@ pipeline {
        					}
     				}
 				}
-			}
-			steps {
 				sh 'mkdir -p results'
             }
 		}
