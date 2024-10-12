@@ -57,7 +57,7 @@ pipeline {
 		stage('SCA: [OSV-scanner]') {
 			steps {
 				sh '''
-					docker run --name osv-scanner \
+					docker run --name osv-scanner-json \
 					-v /home/michal/abcdso/abcd-student/:/app \
 					-v /home/michal/abcdso/reports/:/reports:rw \
 					--user 1000:1000 \
@@ -66,12 +66,23 @@ pipeline {
 					--format json \
 					--output /reports/osv-scan_report.json || true
 				'''
+				sh '''
+					docker run --name osv-scanner-txt \
+					-v /home/michal/abcdso/abcd-student/:/app \
+					-v /home/michal/abcdso/reports/:/reports:rw \
+					--user 1000:1000 \
+					-t osv-scanner:latest \
+					--lockfile /app/package-lock.json \
+					--format table \
+					--output /reports/osv-scan_report.txt || true
+				'''
 			}
 			post {
 				always {
 					sh '''
-						docker cp osv-scanner:/reports/osv-scan_report.json "${WORKSPACE}/results/."
-						docker rm osv-scanner
+						docker cp osv-scanner-json:/reports/osv-scan_report.json "${WORKSPACE}/results/."
+						docker cp osv-scanner-txt:/reports/osv-scan_report.txt "${WORKSPACE}/results/."
+						docker rm osv-scanner-json osv-scanner-txt
 					'''
 				}
 			}
@@ -82,7 +93,7 @@ pipeline {
                     //defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl', defectDojoCredentialsId: API_KEY, sourceCodeUri: 'https://git.com/org/project.git', branchTag: 'main')
 					//defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl')
 				defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michal.lesniewski@opi.org.pl')
-				defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+				defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV Scan', engagementName: 'michal.lesniewski@opi.org.pl')
                 //}
             }
         }
@@ -93,7 +104,7 @@ pipeline {
 			archiveArtifacts artifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
 			//echo 'Sending reports to DefectDojo'
 			//defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michal.lesniewski@opi.org.pl')
-			//defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+			//defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV Scan', engagementName: 'michal.lesniewski@opi.org.pl')
 		}
 	}
 }
