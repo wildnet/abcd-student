@@ -64,7 +64,7 @@ pipeline {
 					-t osv-scanner:latest \
 					--lockfile /app/package-lock.json \
 					--format json \
-					--output /reports/osv-scan_report.json
+					--output /reports/osv-scan_report.json || true
 				'''
 			}
 			post {
@@ -76,13 +76,24 @@ pipeline {
 				}
 			}
 		}
+		stage('DefectDojoPublisher') {
+            steps {
+                //withCredentials([string(credentialsId: 'CREDENTIALS_ID', variable: 'API_KEY')]) {
+                    //defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl', defectDojoCredentialsId: API_KEY, sourceCodeUri: 'https://git.com/org/project.git', branchTag: 'main')
+					//defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+				defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+				defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+                //}
+            }
+        }
     }
 	post {
 		always {
 			echo 'Archiving reports'
 			archiveArtifacts artifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
-			echo 'Sending reports to DefectDojo'
-			defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+			//echo 'Sending reports to DefectDojo'
+			//defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+			//defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl')
 		}
 	}
 }
