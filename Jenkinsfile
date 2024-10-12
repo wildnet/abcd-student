@@ -53,7 +53,29 @@ pipeline {
 					'''
 				}
 			}
-		}		
+		}
+		stage('SCA: [OSV-scanner]') {
+			steps {
+				sh '''
+					docker run --name osv-scanner \
+					-v /home/michal/abcdso/abcd-student/:/app \
+					-v /home/michal/abcdso/reports/:/reports:rw \
+					--user 1000:1000 \
+					-t osv-scanner:latest \
+					--lockfile /app/package-lock.json \
+					--format json \
+					--output /reports/osv-scan_report.json
+				'''
+			}
+			post {
+				always {
+					sh '''
+						docker cp osv-scanner:/reports/osv-scan_report.json "${WORKSPACE}/results/."
+						docker rm osv-scanner
+					'''
+				}
+			}
+		}
     }
 	post {
 		always {
