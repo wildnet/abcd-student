@@ -60,7 +60,6 @@ pipeline {
 					docker run --name osv-scanner-json \
 					-v /home/michal/abcdso/abcd-student/:/app \
 					-v /home/michal/abcdso/reports/:/reports:rw \
-					--user 1000:1000 \
 					-t osv-scanner:latest \
 					--lockfile /app/package-lock.json \
 					--format json \
@@ -70,7 +69,6 @@ pipeline {
 					docker run --name osv-scanner-txt \
 					-v /home/michal/abcdso/abcd-student/:/app \
 					-v /home/michal/abcdso/reports/:/reports:rw \
-					--user 1000:1000 \
 					-t osv-scanner:latest \
 					--lockfile /app/package-lock.json \
 					--format table \
