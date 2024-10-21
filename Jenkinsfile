@@ -97,7 +97,7 @@ pipeline {
 					//defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl')
 				defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michal.lesniewski@opi.org.pl')
 				defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV Scan', engagementName: 'michal.lesniewski@opi.org.pl')
-				defectDojoPublisher(artifact: 'results/trufflehog_report.json', productName: 'Juice Shop', scanType: 'Trufflehog', engagementName: 'michal.lesniewski@opi.org.pl')
+				defectDojoPublisher(artifact: 'results/trufflehog_report.json', productName: 'Juice Shop', scanType: 'Trufflehog Scan', engagementName: 'michal.lesniewski@opi.org.pl')
                 //}
             }
         }
