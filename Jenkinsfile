@@ -85,6 +85,11 @@ pipeline {
 				}
 			}
 		}
+		stage('SCA: [TruffleHog]') {
+			steps {
+				sh 'docker run --rm -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest git file://. --since-commit main --branch main --only-verified --issue-comments --pr-comments --json > ${WORKSPACE}/results/trufflehog_report.json'
+			}
+		}
 		stage('DefectDojoPublisher') {
             steps {
                 //withCredentials([string(credentialsId: 'CREDENTIALS_ID', variable: 'API_KEY')]) {
@@ -92,6 +97,7 @@ pipeline {
 					//defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl')
 				defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michal.lesniewski@opi.org.pl')
 				defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+				defectDojoPublisher(artifact: 'results/trufflehog_report.json', productName: 'Juice Shop', scanType: 'Trufflehog', engagementName: 'michal.lesniewski@opi.org.pl')
                 //}
             }
         }
