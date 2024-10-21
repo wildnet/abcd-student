@@ -87,7 +87,7 @@ pipeline {
 		}
 		stage('SCA: [TruffleHog]') {
 			steps {
-				sh 'docker run --rm -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest git file://. --since-commit main --branch main --only-verified --issue-comments --pr-comments --json > ${WORKSPACE}/results/trufflehog_report.json'
+				sh 'docker run --rm -v "$PWD:/pwd" trufflesecurity/trufflehog:latest git file://. --since-commit main --branch main --only-verified --issue-comments --pr-comments --json > ${WORKSPACE}/results/trufflehog_report.json'
 			}
 		}
 		stage('DefectDojoPublisher') {
