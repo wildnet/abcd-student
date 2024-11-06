@@ -14,7 +14,7 @@ pipeline {
         }
 		stage('Starting environment') {
 			steps {
-				sh 'docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 -p 127.0.0.1:3000:3000 bkimminich/juice-shop'
+				/*sh 'docker start juice-shop || docker run --name juice-shop -d --rm -p 172.17.0.1:3000:3000 -p 127.0.0.1:3000:3000 bkimminich/juice-shop'
 				timeout(5) {
  		   			waitUntil {
        					script {
@@ -29,34 +29,37 @@ pipeline {
          					//return (r == 0);
        					}
     				}
-				}
+				}*/
 				sh 'mkdir -p results'
+				sh 'ls'
             }
 		}
 		stage('DAST: Active scan [ZAP]') {
 			steps {
-				sh '''
+				/*sh '''
 					docker run --name zap \
 						--add-host=host.docker.internal:host-gateway \
 						-v "/home/michal/abcdso/abcd-student/.zap:/zap/wrk/:rw" \
 						-t ghcr.io/zaproxy/zaproxy:stable bash -c \
 						"zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/active.yaml" || true
-				'''
+				'''*/
+				sh 'ls'
 			}
 			post {
 				always {
-					sh '''
+					/*sh '''
 						docker cp zap:/zap/wrk/reports/zap_html_report.html "${WORKSPACE}/results/."
 						docker cp zap:/zap/wrk/reports/zap_xml_report.xml "${WORKSPACE}/results/."
 						docker stop zap juice-shop
 						docker rm zap
-					'''
+					'''*/
+					sh 'ls'
 				}
 			}
 		}
 		stage('SCA: [OSV-scanner]') {
 			steps {
-				sh '''
+				/*sh '''
 					docker run --name osv-scanner-json \
 					-v /home/michal/abcdso/abcd-student/:/app \
 					-v /home/michal/abcdso/reports/:/reports:rw \
@@ -73,21 +76,24 @@ pipeline {
 					--lockfile /app/package-lock.json \
 					--format table \
 					--output /reports/osv-scan_report.txt || true
-				'''
+				'''*/
+				sh 'ls'
 			}
 			post {
 				always {
-					sh '''
+					/*sh '''
 						docker cp osv-scanner-json:/reports/osv-scan_report.json "${WORKSPACE}/results/."
 						docker cp osv-scanner-txt:/reports/osv-scan_report.txt "${WORKSPACE}/results/."
 						docker rm osv-scanner-json osv-scanner-txt
-					'''
+					'''*/
+					sh 'ls'
 				}
 			}
 		}
 		stage('SAST: [TruffleHog]') {
 			steps {
-				sh 'docker run --rm -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --repo https://github.com/wildnet/abcd-student --only-verified --issue-comments --pr-comments --json > ${WORKSPACE}/results/trufflehog_report.json'
+				//sh 'docker run --rm -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --repo https://github.com/wildnet/abcd-student --only-verified --issue-comments --pr-comments --json > ${WORKSPACE}/results/trufflehog_report.json'
+				sh 'ls'
 			}
 		}
 		stage('DefectDojoPublisher') {
@@ -95,9 +101,10 @@ pipeline {
                 //withCredentials([string(credentialsId: 'CREDENTIALS_ID', variable: 'API_KEY')]) {
                     //defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl', defectDojoCredentialsId: API_KEY, sourceCodeUri: 'https://git.com/org/project.git', branchTag: 'main')
 					//defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl')
-				defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michal.lesniewski@opi.org.pl')
-				defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV Scan', engagementName: 'michal.lesniewski@opi.org.pl')
-				defectDojoPublisher(artifact: 'results/trufflehog_report.json', productName: 'Juice Shop', scanType: 'Trufflehog Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+				//--defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+				//--defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+				//--defectDojoPublisher(artifact: 'results/trufflehog_report.json', productName: 'Juice Shop', scanType: 'Trufflehog Scan', engagementName: 'michal.lesniewski@opi.org.pl')
+				//--defectDojoPublisher(artifact: 'results/semgrep_report.json', productName: 'Juice Shop', scanType: 'Semgrep JSON Report', engagementName: 'michal.lesniewski@opi.org.pl')
                 //}
             }
         }
