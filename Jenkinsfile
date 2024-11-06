@@ -108,7 +108,7 @@ pipeline {
 				//sh 'semgrep --help'
 				//sh 'semgrep scan --help'
 				sh 'semgrep scan --json --json-output=results/semgrep_report.json --verbose --config auto .'
-				sh 'semgrep scan --verbose --config auto . > results/semgrep_report.txt'
+				sh 'semgrep scan --text --text-output=results/semgrep_report.txt --verbose --config auto .'
 				sh 'ls'
 			}
 		}
