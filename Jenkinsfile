@@ -31,6 +31,7 @@ pipeline {
     				}
 				}*/
 				sh 'mkdir -p results'
+				echo 'start env'
 				sh 'ls'
             }
 		}
@@ -43,6 +44,7 @@ pipeline {
 						-t ghcr.io/zaproxy/zaproxy:stable bash -c \
 						"zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/active.yaml" || true
 				'''*/
+				echo 'DAST [ZAP]'
 				sh 'ls'
 			}
 			post {
@@ -53,6 +55,7 @@ pipeline {
 						docker stop zap juice-shop
 						docker rm zap
 					'''*/
+					echo 'always'
 					sh 'ls'
 				}
 			}
@@ -77,6 +80,7 @@ pipeline {
 					--format table \
 					--output /reports/osv-scan_report.txt || true
 				'''*/
+				echo 'SCA: [OSV-scanner]'
 				sh 'ls'
 			}
 			post {
@@ -86,6 +90,7 @@ pipeline {
 						docker cp osv-scanner-txt:/reports/osv-scan_report.txt "${WORKSPACE}/results/."
 						docker rm osv-scanner-json osv-scanner-txt
 					'''*/
+					echo 'always'
 					sh 'ls'
 				}
 			}
@@ -93,11 +98,13 @@ pipeline {
 		stage('SAST: [TruffleHog]') {
 			steps {
 				//sh 'docker run --rm -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --repo https://github.com/wildnet/abcd-student --only-verified --issue-comments --pr-comments --json > ${WORKSPACE}/results/trufflehog_report.json'
+				echo 'SAST: [TruffleHog]'
 				sh 'ls'
 			}
 		}
 		stage('SAST: [Semgrep]') {
 			steps {
+				echo 'SAST: [Semgrep]'
 				sh 'semgrep --help'
 				sh 'ls'
 			}
