@@ -96,6 +96,12 @@ pipeline {
 				sh 'ls'
 			}
 		}
+		stage('SAST: [Semgrep]') {
+			steps {
+				sh 'semgrep --help'
+				sh 'ls'
+			}
+		}
 		stage('DefectDojoPublisher') {
             steps {
                 //withCredentials([string(credentialsId: 'CREDENTIALS_ID', variable: 'API_KEY')]) {
