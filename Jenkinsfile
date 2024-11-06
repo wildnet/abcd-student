@@ -107,8 +107,8 @@ pipeline {
 				echo 'SAST: [Semgrep]'
 				//sh 'semgrep --help'
 				//sh 'semgrep scan --help'
-				sh 'semgrep scan --config auto .'		
-				sh 'semgrep scan --help'
+				sh 'semgrep scan --json --json-output=results/semgrep_report.json --config auto .'		
+				//sh 'semgrep scan --help'
 				sh 'ls'
 			}
 		}
