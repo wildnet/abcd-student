@@ -105,7 +105,8 @@ pipeline {
 		stage('SAST: [Semgrep]') {
 			steps {
 				echo 'SAST: [Semgrep]'
-				sh 'semgrep --help'
+				//sh 'semgrep --help'
+				sh 'semgrep scan --config auto'
 				sh 'ls'
 			}
 		}
