@@ -107,7 +107,7 @@ pipeline {
 				echo 'SAST: [Semgrep]'
 				//sh 'semgrep --help'
 				sh 'semgrep scan --config auto'
-				sh 'semgrep scan --baseline-commit --config auto'
+				sh 'semgrep scan --help'
 				sh 'ls'
 			}
 		}
