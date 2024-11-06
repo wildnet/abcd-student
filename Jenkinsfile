@@ -111,6 +111,7 @@ pipeline {
 		}
 		stage('DefectDojoPublisher') {
             steps {
+				echo 'Sending reports to DefectDojo'
                 //withCredentials([string(credentialsId: 'CREDENTIALS_ID', variable: 'API_KEY')]) {
                     //defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl', defectDojoCredentialsId: API_KEY, sourceCodeUri: 'https://git.com/org/project.git', branchTag: 'main')
 					//defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV-Scanner Scan', engagementName: 'michal.lesniewski@opi.org.pl')
@@ -118,7 +119,7 @@ pipeline {
 				//--defectDojoPublisher(artifact: 'results/osv-scan_report.json', productName: 'Juice Shop', scanType: 'OSV Scan', engagementName: 'michal.lesniewski@opi.org.pl')
 				//--defectDojoPublisher(artifact: 'results/trufflehog_report.json', productName: 'Juice Shop', scanType: 'Trufflehog Scan', engagementName: 'michal.lesniewski@opi.org.pl')
 				//--defectDojoPublisher(artifact: 'results/semgrep_report.json', productName: 'Juice Shop', scanType: 'Semgrep JSON Report', engagementName: 'michal.lesniewski@opi.org.pl')
-                //}
+                }
             }
         }
     }
